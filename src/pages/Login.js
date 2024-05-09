@@ -5,8 +5,28 @@ import { useState } from 'react';
 export function Login() {
   const [activeKey, setActiveKey] = useState('1');
 
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+  const valid = () => ({
+    validator(_, value) {
+      if (
+        value &&
+        value.length >= 8 &&
+        /[a-z]/.test(value) &&
+        /[A-Z]/.test(value) &&
+        /\d/.test(value)
+      ) {
+        return Promise.resolve();
+      }
+      if (!value) {
+        return Promise.resolve();
+      }
+      return Promise.reject(
+        '密码至少8位，且包含大小写字母和数字！'
+      );
+    },
+  });
+
+  const login = () => {
+    message.success('登入成功', 3);
   };
 
   const Register = () => {
@@ -20,7 +40,7 @@ export function Login() {
         <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={setActiveKey} centered>
           <Tabs.TabPane tab={<Typography.Title level={3}>登录</Typography.Title>} key="1">
             <Form
-              onFinish={onFinish}
+              onFinish={login}
               labelCol={{
                 span: 8,
               }}
@@ -45,6 +65,7 @@ export function Login() {
                     required: true,
                     message: '请输入密码',
                   },
+                  valid,
                 ]}
               >
                 <Input.Password />
@@ -88,25 +109,7 @@ export function Login() {
                     required: true,
                     message: '请输入密码',
                   },
-                  () => ({
-                    validator(_, value) {
-                      if (
-                        value &&
-                        value.length >= 8 &&
-                        /[a-z]/.test(value) &&
-                        /[A-Z]/.test(value) &&
-                        /\d/.test(value)
-                      ) {
-                        return Promise.resolve();
-                      }
-                      if (!value) {
-                        return Promise.resolve();
-                      }
-                      return Promise.reject(
-                        '密码至少8位，且包含大写字母、小写字母和数字！'
-                      );
-                    },
-                  }),
+                  valid,
                 ]}
               >
                 <Input.Password />
