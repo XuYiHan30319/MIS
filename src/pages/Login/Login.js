@@ -1,9 +1,11 @@
 import React from 'react';
 import { Form, Input, Button, Tabs, Typography, message } from 'antd';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
   const [activeKey, setActiveKey] = useState('1');
+  const navigate = useNavigate();
 
   const valid = () => ({
     validator(_, value) {
@@ -27,6 +29,7 @@ export function Login() {
 
   const login = () => {
     message.success('登入成功', 3);
+    navigate('/dashboard'); // 跳转到首页
   };
 
   const Register = () => {
