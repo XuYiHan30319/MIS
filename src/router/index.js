@@ -1,7 +1,12 @@
-import { Login } from "../pages/Login/Login";
-
+import { Login } from "../pages/Login";
+import { Dashboard } from "../pages/Dashboard";
 import { createBrowserRouter } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
+function isLogin() {
+    console.log(localStorage.getItem("isLogin"));
+    return localStorage.getItem("isLogin") === "true";
+}
+
 const router = createBrowserRouter([
     {
         path: "/login",
@@ -9,8 +14,9 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
+        element: isLogin() ? <Dashboard /> : <Navigate to="/login" replace />,
         children: [
-            
+
         ]
     },
     {

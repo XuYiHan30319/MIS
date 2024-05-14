@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Tabs, Typography, message } from 'antd';
+import { Form, Input, Button, Tabs, Typography, message, Item } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,6 +29,7 @@ export function Login() {
 
   const login = () => {
     message.success('登入成功', 3);
+    localStorage.setItem('isLogin', 'true'); // 设置登录状态
     navigate('/dashboard'); // 跳转到首页
   };
 
@@ -47,6 +48,7 @@ export function Login() {
               labelCol={{
                 span: 8,
               }}
+              style={{ marginLeft: '-100px' }}
             >
               <Form.Item
                 label="用户名"
@@ -74,10 +76,7 @@ export function Login() {
                 <Input.Password />
               </Form.Item>
               <Form.Item
-                wrapperCol={{
-                  offset: 10,
-                  span: 16,
-                }}
+                style={{ marginLeft: '290px' }}
               >
                 <Button type="primary" htmlType="submit" >
                   登录
@@ -91,6 +90,7 @@ export function Login() {
               labelCol={{
                 span: 8,
               }}
+              style={{ marginLeft: '-100px' }}
             >
               <Form.Item
                 label="用户名"
@@ -139,10 +139,7 @@ export function Login() {
                 <Input.Password />
               </Form.Item>
               <Form.Item
-                wrapperCol={{
-                  offset: 10,
-                  span: 16,
-                }}
+                style={{ marginLeft: '290px' }}
               >
                 <Button type="primary" htmlType="submit" >
                   注册
