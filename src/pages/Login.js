@@ -1,7 +1,7 @@
-import React from 'react';
-import { Form, Input, Button, Tabs, Typography, message, Item } from 'antd';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Button, Tabs, Typography, message, } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 export function Login() {
   const [activeKey, setActiveKey] = useState('1');
@@ -26,15 +26,50 @@ export function Login() {
       );
     },
   });
+  useEffect(() => {
+    let users = JSON.parse(localStorage.getItem("user")) || [];
+    if (users.length === 0) {
+      localStorage.setItem("user", JSON.stringify([
+        {
+          username: 'admin',
+          password: CryptoJS.SHA256('Admin123456').toString()
+        }
+      ]));
+    }
+  }, []);
 
-  const login = () => {
+  const login = (values) => {
+    //查找用户是否存在
+    let users = JSON.parse(localStorage.getItem("user")) || [];
+    let user = users.find(user => user.username === values.username);
+    if (!user) {
+      message.error('用户不存在', 3);
+      return;
+    }
+    let password = CryptoJS.SHA256(values.password).toString();
+    console.log(password);
+    if (user.password !== password) {
+      message.error('密码错误', 3);
+      return;
+    }
     message.success('登入成功', 3);
     localStorage.setItem('isLogin', 'true'); // 设置登录状态
     navigate('/dashboard'); // 跳转到首页
   };
 
-  const Register = () => {
+  const Register = (values) => {
     message.success('注册成功', 3);
+    let users = JSON.parse(localStorage.getItem("user")) || [];
+    //查重
+    if (users.find(user => user.username === values.username)) {
+      message.error('用户已存在', 3);
+      return;
+    }
+    users.push({
+      username: values.username,
+      password: CryptoJS.SHA256(values.password).toString()
+    });
+    localStorage.setItem("user", JSON.stringify(users));
     setActiveKey('1'); // 跳转到tab1
   };
 
@@ -44,7 +79,9 @@ export function Login() {
         <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={setActiveKey} centered>
           <Tabs.TabPane tab={<Typography.Title level={3}>登录</Typography.Title>} key="1">
             <Form
-              onFinish={login}
+              onFinish={(values) => {
+                login(values);
+              }}
               labelCol={{
                 span: 8,
               }}
@@ -86,7 +123,9 @@ export function Login() {
           </Tabs.TabPane>
           <Tabs.TabPane tab={<Typography.Title level={3}>注册</Typography.Title>} key="2">
             <Form
-              onFinish={Register}
+              onFinish={(values) => {
+                Register(values);
+              }}
               labelCol={{
                 span: 8,
               }}
