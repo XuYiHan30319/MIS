@@ -7,11 +7,12 @@ export function Login() {
   const [activeKey, setActiveKey] = useState('1');
   const navigate = useNavigate();
 
-  const valid = () => ({
+  const passwordValid = () => ({
     validator(_, value) {
       if (
         value &&
         value.length >= 8 &&
+        value.length <= 16 &&
         /[a-z]/.test(value) &&
         /[A-Z]/.test(value) &&
         /\d/.test(value)
@@ -22,17 +23,32 @@ export function Login() {
         return Promise.resolve();
       }
       return Promise.reject(
-        '密码至少8位，且包含大小写字母和数字！'
+        '密码8~16位数，且包含大小写字母和数字！'
       );
     },
   });
+
+  const emailValid = () => ({
+    validator(_, value) {
+      if (value && /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+        return Promise.resolve();
+      }
+      if (!value) {
+        return Promise.resolve();
+      }
+      return Promise.reject('邮箱格式错误！');
+    },
+  });
+
   useEffect(() => {
     let users = JSON.parse(localStorage.getItem("user")) || [];
     if (users.length === 0) {
       localStorage.setItem("user", JSON.stringify([
         {
           username: 'admin',
-          password: CryptoJS.SHA256('Admin123456').toString()
+          password: CryptoJS.SHA256('Admin123456').toString(),
+          email: "81723334@qq.com",
+          privilege: 0
         }
       ]));
     }
@@ -67,10 +83,12 @@ export function Login() {
     }
     users.push({
       username: values.username,
-      password: CryptoJS.SHA256(values.password).toString()
+      password: CryptoJS.SHA256(values.password).toString(),
+      email: values.email,
+      privilege: 1
     });
     localStorage.setItem("user", JSON.stringify(users));
-    setActiveKey('1'); // 跳转到tab1
+    setActiveKey('1');
   };
 
   return (
@@ -107,7 +125,7 @@ export function Login() {
                     required: true,
                     message: '请输入密码',
                   },
-                  valid,
+                  passwordValid,
                 ]}
               >
                 <Input.Password />
@@ -144,6 +162,19 @@ export function Login() {
                 <Input />
               </Form.Item>
               <Form.Item
+                label="邮箱"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入邮箱',
+                  },
+                  emailValid,
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
                 label="密码"
                 name="password"
                 rules={[
@@ -151,7 +182,7 @@ export function Login() {
                     required: true,
                     message: '请输入密码',
                   },
-                  valid,
+                  passwordValid,
                 ]}
               >
                 <Input.Password />
