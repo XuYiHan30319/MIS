@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Table, Button, Modal, Form, Input, Select, message } from 'antd';
 import CryptoJS from 'crypto-js';
 import { passwordValid, emailValid } from '../utils/userInfoVaild';
+import { isAuthorize } from '../utils/authorize';
 
 export function UserControl() {
   const [users, setUsers] = useState(JSON.parse(localStorage.getItem("user")) || []);
@@ -9,7 +11,6 @@ export function UserControl() {
   const [addUserVisible, setAddUserVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const [form] = Form.useForm();
-
   const columns = [
     {
       title: 'Username',
@@ -94,6 +95,14 @@ export function UserControl() {
     const filteredData = users.filter(user => user.username.toLowerCase().includes(searchValue));
     setFilteredUsers(filteredData);
   };
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthorize()) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
 
   return (
     <div>

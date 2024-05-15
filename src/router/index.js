@@ -1,18 +1,9 @@
 import { Login } from "../pages/Login";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Dashboard } from "../pages/Dashboard";
-import { createBrowserRouter } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
 import { UserControl } from "../pages/userControl";
 import { RoleControl } from "../pages/roleControl";
 import { MenuControl } from "../pages/menuControl";
-
-function isLogin() {
-  return localStorage.getItem("isLogin") === "true";
-}
-
-function isAuthorize() {
-  return localStorage.getItem("privilege") === "管理员";
-}
 
 const router = createBrowserRouter([
   {
@@ -21,20 +12,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: isLogin() ? <Dashboard /> : <Navigate to="/login" replace />,
+    element: <Dashboard />,
     children: [
       {
-        path: "userControl", // 修改这里为相对路径
-        element: isAuthorize() ? <UserControl /> : <Navigate to="/dashboard" replace />
+        path: "userControl",
+        element: (
+          <UserControl />
+        )
       },
       {
         path: "roleControl",
-        element: isAuthorize() ? <RoleControl /> : <Navigate to="/dashboard" replace />
+        element: (
+          <RoleControl />
+        )
       },
       {
         path: "menuControl",
-        element: isAuthorize() ? <MenuControl /> : <Navigate to="/dashboard" replace />
-
+        element: (
+          <MenuControl />
+        )
       }
     ]
   },

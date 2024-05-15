@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Tabs, Typography, message, } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
@@ -71,7 +71,6 @@ export function Login() {
       return;
     }
     let password = CryptoJS.SHA256(values.password).toString();
-    console.log(password);
     if (user.password !== password) {
       message.error('密码错误', 3);
       return;

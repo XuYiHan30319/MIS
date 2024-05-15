@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
+import { isLogin } from '../utils/authorize';
 const { Content, Sider } = Layout;
 
 
@@ -9,7 +10,13 @@ export function Dashboard() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const navigate = useNavigate();
   // 侧边栏的菜单项
+  useEffect(() => {
+    if (!isLogin()) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const items = [InsuranceOutlined].map((icon, index) => {
     return {
@@ -42,7 +49,6 @@ export function Dashboard() {
     };
   });
 
-  const navigate = useNavigate();
   const pathItems = useLocation().pathname.split('/').filter(item => item);
   const pathLength = pathItems.length;
 
