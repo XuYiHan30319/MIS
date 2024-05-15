@@ -95,8 +95,8 @@ export function UserControl() {
     const filteredData = users.filter(user => user.username.toLowerCase().includes(searchValue));
     setFilteredUsers(filteredData);
   };
+  
   const navigate = useNavigate();
-
   useEffect(() => {
     if (!isAuthorize()) {
       navigate('/login');

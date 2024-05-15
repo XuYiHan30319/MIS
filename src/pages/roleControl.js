@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { isAuthorize } from '../utils/authorize';
 
 export function RoleControl() {
   const [roles, setRoles] = useState(JSON.parse(localStorage.getItem("privileges")) || []);
@@ -7,6 +9,13 @@ export function RoleControl() {
   const [addRoleVisible, setAddRoleVisible] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
   const [form] = Form.useForm();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthorize()) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const columns = [
     {
