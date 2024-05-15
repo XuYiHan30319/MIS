@@ -40,6 +40,9 @@ export function Login() {
     localStorage.setItem('isLogin', 'true'); // 设置登录状态
     localStorage.setItem('username', user.username); // 设置用户名
     localStorage.setItem('privilege', user.privilege); // 设置权限
+    //设置权限列表
+    let privileges = [{ role: "管理员", desc: "超级管理员，有所有的权限" }, { role: "普通用户", desc: "普通用户，只有查看权限" }];
+    localStorage.setItem('privileges', JSON.stringify(privileges));
     navigate('/dashboard'); // 跳转到首页
   };
 

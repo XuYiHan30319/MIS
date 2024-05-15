@@ -5,6 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { UserControl } from "../pages/userControl";
 import { RoleControl } from "../pages/roleControl";
 import PrivilegeControl from "../pages/privilegeControl";
+import { MenuControl } from "../pages/menuControl";
 
 function isLogin() {
   return localStorage.getItem("isLogin") === "true";
@@ -28,12 +29,17 @@ const router = createBrowserRouter([
         element: isAuthorize() ? <UserControl /> : <Navigate to="/dashboard" replace />
       },
       {
-        path: "RollControl",
+        path: "roleControl",
         element: isAuthorize() ? <RoleControl /> : <Navigate to="/dashboard" replace />
       },
       {
-        path: "PrivilegeControl",
+        path: "privilegeControl",
         element: isAuthorize() ? <PrivilegeControl /> : <Navigate to="/dashboard" replace />
+      },
+      {
+        path: "menuControl",
+        element: isAuthorize() ? <MenuControl /> : <Navigate to="/dashboard" replace />
+
       }
     ]
   },

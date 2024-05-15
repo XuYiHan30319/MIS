@@ -1,7 +1,7 @@
 import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined, RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
+import { RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
-import { Outlet, useNavigate, useLocation,Link } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 const { Content, Sider } = Layout;
 
 
@@ -10,20 +10,42 @@ export function Dashboard() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   // 侧边栏的菜单项
-  
-  const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined, InsuranceOutlined].map((icon, index) => {
-    const key = String(index + 1);
+
+  const items = [InsuranceOutlined].map((icon, index) => {
     return {
-      key: `sub${key}`,
+      key: `权限管理`,
       icon: React.createElement(icon),
-      label: `subnav ${key}`,
-      children: new Array(4).fill(null).map((_, j) => {
-        const subKey = index * 4 + j + 1;
-        return {
-          key: subKey,
-          label: `option${subKey}`,
-        };
-      }),
+      label: `权限管理`,
+      children: [
+        {
+          key: `用户管理`,
+          label: `用户管理`,
+          onClick: () => {
+            navigate('/dashboard/userControl');
+          }
+        },
+        {
+          key: `角色管理`,
+          label: `角色管理`,
+          onClick: () => {
+            navigate('/dashboard/roleControl');
+          }
+        },
+        {
+          key: `权限管理`,
+          label: `权限管理`,
+          onClick: () => {
+            navigate('/dashboard/privilegeControl');
+          }
+        },
+        {
+          key: `菜单管理`,
+          label: `菜单管理`,
+          onClick: () => {
+            navigate('/dashboard/menuControl');
+          }
+        },
+      ],
     };
   });
 
@@ -40,12 +62,12 @@ export function Dashboard() {
           <Menu
             mode="inline"
             defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
+            defaultOpenKeys={['权限管理']}
             style={{
               height: '100%',
               borderRight: 0,
             }}
-            items={items2}
+            items={items}
           />
         </Sider>
         <Layout

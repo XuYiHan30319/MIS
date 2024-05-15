@@ -32,7 +32,7 @@ export function UserControl() {
       render: (text, record) => (
         <span>
           <Button onClick={() => editUser(record)}>Edit</Button>
-          <Button onClick={() => deleteUser(record.username)} style={{ marginLeft: 8 }}>Delete</Button>
+          <Button onClick={() => deleteUser(record.username)} style={{ marginLeft: 8 }} danger>Delete</Button>
         </span>
       ),
     },
@@ -97,10 +97,9 @@ export function UserControl() {
 
   return (
     <div>
-      <h1>用户管理</h1>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
         <Input.Search
-          placeholder="根据用户名搜索"
+          placeholder="根据权限名搜索"
           onChange={handleSearch}
           style={{ width: '25%' }}
         />
@@ -114,8 +113,11 @@ export function UserControl() {
           </Form.Item>
           <Form.Item name="privilege" label="Privilege" rules={[{ required: true, message: '选择用户权限!' }]}>
             <Select>
-              <Select.Option value="管理员">Admin</Select.Option>
-              <Select.Option value="普通用户">User</Select.Option>
+              {
+                localStorage.getItem("privileges") && JSON.parse(localStorage.getItem("privileges")).map(privilege => (
+                  <Select.Option key={privilege.role} value={privilege.role}>{privilege.role}</Select.Option>
+                ))
+              }
             </Select>
           </Form.Item>
           <Form.Item name="password" label="Password" rules={[{ required: true, message: '输入密码!' }, passwordValid]}>
