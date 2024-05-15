@@ -16,7 +16,7 @@ export function Login() {
           username: 'admin',
           password: CryptoJS.SHA256('Admin123456').toString(),
           email: "81723334@qq.com",
-          privilege: 0
+          privilege: "管理员"
         }
       ]));
     }
@@ -38,11 +38,12 @@ export function Login() {
     }
     message.success('登入成功', 3);
     localStorage.setItem('isLogin', 'true'); // 设置登录状态
+    localStorage.setItem('username', user.username); // 设置用户名
+    localStorage.setItem('privilege', user.privilege); // 设置权限
     navigate('/dashboard'); // 跳转到首页
   };
 
   const Register = (values) => {
-    message.success('注册成功', 3);
     let users = JSON.parse(localStorage.getItem("user")) || [];
     //查重
     if (users.find(user => user.username === values.username)) {
@@ -57,6 +58,7 @@ export function Login() {
     });
     localStorage.setItem("user", JSON.stringify(users));
     setActiveKey('1');
+    message.success('注册成功', 3);
   };
 
   return (

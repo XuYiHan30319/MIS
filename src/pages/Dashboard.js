@@ -1,7 +1,7 @@
 import React from 'react';
 import { LaptopOutlined, NotificationOutlined, UserOutlined, RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation,Link } from 'react-router-dom';
 const { Content, Sider } = Layout;
 
 
@@ -10,6 +10,7 @@ export function Dashboard() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   // 侧边栏的菜单项
+  
   const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined, InsuranceOutlined].map((icon, index) => {
     const key = String(index + 1);
     return {
@@ -25,9 +26,10 @@ export function Dashboard() {
       }),
     };
   });
-  const navigate = useNavigate();
-  const location = useLocation();
 
+  const navigate = useNavigate();
+  const pathItems = useLocation().pathname.split('/').filter(item => item);
+  const pathLength = pathItems.length;
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -58,15 +60,24 @@ export function Dashboard() {
             alignItems: 'center',
             margin: '16px 0',
           }}>
-            <Breadcrumb items={location.pathname.split('/').map((item, index) => (
-              {
-                title: <a href={`/${item}`} key={index}>{item}</a>,
-              }
-            ))} />
-            <Button type="primary" shape="circle" onClick={() => {
-              localStorage.removeItem('isLogin');
-              navigate('/login');
-            }} icon={<RightCircleTwoTone />} />
+            <Breadcrumb>
+              {pathItems.map((item, index) => (
+                <Breadcrumb.Item key={index}>
+                  {index === pathLength - 1 ? (
+                    <span>{item}</span>
+                  ) : (
+                    <Link to={`/${pathItems.slice(0, index + 1).join('/')}`}>{item}</Link>
+                  )}
+                </Breadcrumb.Item>
+              ))}
+            </Breadcrumb>
+            <div>
+              <span style={{ marginRight: 16 }}>welcome {localStorage.getItem('username')}</span>
+              <Button type="primary" shape="circle" onClick={() => {
+                localStorage.removeItem('isLogin');
+                navigate('/login');
+              }} icon={<RightCircleTwoTone />} />
+            </div>
           </div>
           <Content
             style={{

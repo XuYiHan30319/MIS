@@ -73,7 +73,7 @@ export function UserControl() {
       if (editingUser) {
         updatedUsers = users.map(user => user.username === editingUser.username ? values : user);
       } else {
-        values.password = CryptoJS.SHA256(values.password);
+        values.password = CryptoJS.SHA256(values.password).toString();
         updatedUsers = [...users, values];
       }
       setUsers(updatedUsers);
