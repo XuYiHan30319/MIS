@@ -32,13 +32,6 @@ export function Dashboard() {
           }
         },
         {
-          key: `权限管理`,
-          label: `权限管理`,
-          onClick: () => {
-            navigate('/dashboard/privilegeControl');
-          }
-        },
-        {
           key: `菜单管理`,
           label: `菜单管理`,
           onClick: () => {

@@ -4,7 +4,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 import { UserControl } from "../pages/userControl";
 import { RoleControl } from "../pages/roleControl";
-import PrivilegeControl from "../pages/privilegeControl";
 import { MenuControl } from "../pages/menuControl";
 
 function isLogin() {
@@ -31,10 +30,6 @@ const router = createBrowserRouter([
       {
         path: "roleControl",
         element: isAuthorize() ? <RoleControl /> : <Navigate to="/dashboard" replace />
-      },
-      {
-        path: "privilegeControl",
-        element: isAuthorize() ? <PrivilegeControl /> : <Navigate to="/dashboard" replace />
       },
       {
         path: "menuControl",

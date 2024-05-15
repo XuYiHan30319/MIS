@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Children, useEffect, useState } from 'react';
 import { Form, Input, Button, Tabs, Typography, message, } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
@@ -20,6 +20,46 @@ export function Login() {
         }
       ]));
     }
+    //设置权限列表
+    let privileges = JSON.parse(localStorage.getItem('privileges')) || [];
+    if (privileges.length === 0) {
+      privileges = [
+        {
+          role: '管理员',
+          desc: '拥有所有权限'
+        },
+        {
+          role: '普通用户',
+          desc: '只能查看'
+        }
+      ];
+      localStorage.setItem('privileges', JSON.stringify(privileges));
+    }
+    //设置菜单列表
+    let menus = JSON.parse(localStorage.getItem('menus')) || [];
+    if (menus.length === 0) {
+      menus = [
+        {
+          title: '权限管理',
+          icon: 'InsuranceOutlined',
+          Children: [
+            {
+              title: '用户管理',
+              path: '/dashboard/userControl'
+            },
+            {
+              title: '角色管理',
+              path: '/dashboard/roleControl'
+            },
+            {
+              title: '菜单管理',
+              path: '/dashboard/menuControl'
+            }
+          ]
+        }
+      ];
+      localStorage.setItem('menus', JSON.stringify(menus));
+    }
   }, []);
 
   const login = (values) => {
@@ -40,9 +80,6 @@ export function Login() {
     localStorage.setItem('isLogin', 'true'); // 设置登录状态
     localStorage.setItem('username', user.username); // 设置用户名
     localStorage.setItem('privilege', user.privilege); // 设置权限
-    //设置权限列表
-    let privileges = [{ role: "管理员", desc: "超级管理员，有所有的权限" }, { role: "普通用户", desc: "普通用户，只有查看权限" }];
-    localStorage.setItem('privileges', JSON.stringify(privileges));
     navigate('/dashboard'); // 跳转到首页
   };
 
