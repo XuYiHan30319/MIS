@@ -41,21 +41,24 @@ export function Login() {
       menus = [
         {
           title: '权限管理',
+          parent: "",
           icon: 'InsuranceOutlined',
-          Children: [
-            {
-              title: '用户管理',
-              path: '/dashboard/userControl'
-            },
-            {
-              title: '角色管理',
-              path: '/dashboard/roleControl'
-            },
-            {
-              title: '菜单管理',
-              path: '/dashboard/menuControl'
-            }
-          ]
+          path: ""
+        },
+        {
+          title: '用户管理',
+          parent: '权限管理',
+          path: '/dashboard/userControl',
+        },
+        {
+          title: '角色管理',
+          parent: '权限管理',
+          path: '/dashboard/roleControl',
+        },
+        {
+          title: '菜单管理',
+          parent: '权限管理',
+          path: '/dashboard/menuControl',
         }
       ];
       localStorage.setItem('menus', JSON.stringify(menus));
