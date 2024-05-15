@@ -2,43 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Tabs, Typography, message, } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import { passwordValid, emailValid } from '../utils/userInfoVaild';
 
 export function Login() {
   const [activeKey, setActiveKey] = useState('1');
   const navigate = useNavigate();
-
-  const passwordValid = () => ({
-    validator(_, value) {
-      if (
-        value &&
-        value.length >= 8 &&
-        value.length <= 16 &&
-        /[a-z]/.test(value) &&
-        /[A-Z]/.test(value) &&
-        /\d/.test(value)
-      ) {
-        return Promise.resolve();
-      }
-      if (!value) {
-        return Promise.resolve();
-      }
-      return Promise.reject(
-        '密码8~16位数，且包含大小写字母和数字！'
-      );
-    },
-  });
-
-  const emailValid = () => ({
-    validator(_, value) {
-      if (value && /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
-        return Promise.resolve();
-      }
-      if (!value) {
-        return Promise.resolve();
-      }
-      return Promise.reject('邮箱格式错误！');
-    },
-  });
 
   useEffect(() => {
     let users = JSON.parse(localStorage.getItem("user")) || [];

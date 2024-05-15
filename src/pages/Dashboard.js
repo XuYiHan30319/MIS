@@ -1,30 +1,30 @@
 import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined, RightCircleTwoTone } from '@ant-design/icons';
+import { LaptopOutlined, NotificationOutlined, UserOutlined, RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 const { Content, Sider } = Layout;
 
-// 侧边栏的菜单项
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-  const key = String(index + 1);
-  return {
-    key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
-    children: new Array(4).fill(null).map((_, j) => {
-      const subKey = index * 4 + j + 1;
-      return {
-        key: subKey,
-        label: `option${subKey}`,
-      };
-    }),
-  };
-});
 
 export function Dashboard() {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  // 侧边栏的菜单项
+  const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined, InsuranceOutlined].map((icon, index) => {
+    const key = String(index + 1);
+    return {
+      key: `sub${key}`,
+      icon: React.createElement(icon),
+      label: `subnav ${key}`,
+      children: new Array(4).fill(null).map((_, j) => {
+        const subKey = index * 4 + j + 1;
+        return {
+          key: subKey,
+          label: `option${subKey}`,
+        };
+      }),
+    };
+  });
   const navigate = useNavigate();
   const location = useLocation();
 
