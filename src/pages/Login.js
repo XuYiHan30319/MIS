@@ -43,22 +43,31 @@ export function Login() {
           title: '权限管理',
           parent: "",
           icon: 'InsuranceOutlined',
-          path: ""
+          path: "",
         },
         {
           title: '用户管理',
           parent: '权限管理',
           path: '/userControl',
+          allowUser: [
+            '管理员'
+          ]
         },
         {
           title: '角色管理',
           parent: '权限管理',
           path: '/roleControl',
+          allowUser: [
+            '管理员'
+          ]
         },
         {
           title: '菜单管理',
           parent: '权限管理',
           path: '/menuControl',
+          allowUser: [
+            '管理员'
+          ]
         }
       ];
       localStorage.setItem('menus', JSON.stringify(menus));

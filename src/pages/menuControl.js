@@ -87,6 +87,11 @@ export function MenuControl() {
       if (editingMenu) {
         updatedMenus = menus.map(menu => menu.title === editingMenu.title ? values : menu);
       } else {
+        if (values.parent !== '') {
+          values.allowUser = [
+            '管理员'
+          ]
+        }
         updatedMenus = [...menus, values];
       }
       setMenus(updatedMenus);

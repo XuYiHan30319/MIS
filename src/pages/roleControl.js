@@ -41,7 +41,7 @@ export function RoleControl() {
         <span>
           <Button onClick={() => editRole(record)}>Edit</Button>
           <Button onClick={() => deleteRole(record.role)} style={{ marginLeft: 8 }} danger>Delete</Button>
-          <Button onClick={() => managePrivilege(record)} style={{ marginLeft: 8 }}>privilege</Button>
+          <Button onClick={() => managePrivilege(record)} style={{ marginLeft: 8 }}>Privilege</Button>
         </span>
       ),
     },
@@ -56,7 +56,7 @@ export function RoleControl() {
       const key = path || title;
 
       if (!map[key]) {
-        map[key] = { title, key, children: [] };
+        map[key] = { title, key, children: [], allowUser: menu.allowUser };
       }
 
       if (parent) {
@@ -121,7 +121,11 @@ export function RoleControl() {
 
   const managePrivilege = (role) => {
     setEditingRole(role);
-    setSelectedKeys(role.menus || []);
+    const storedMenus = JSON.parse(localStorage.getItem("menus")) || [];
+    const roleMenus = storedMenus
+      .filter(menu => menu.allowUser && menu.allowUser.includes(role.role))
+      .map(menu => menu.path || menu.title);
+    setSelectedKeys(roleMenus);
     setPrivilegeVisible(true);
   };
 
@@ -129,9 +133,20 @@ export function RoleControl() {
     const updatedRoles = roles.map(role =>
       role.role === editingRole.role ? { ...role, menus: selectedKeys } : role
     );
+
+    const storedMenus = JSON.parse(localStorage.getItem("menus"));
+    const updatedMenus = storedMenus.map(menu => {
+      if (selectedKeys.includes(menu.path || menu.title)) {
+        return { ...menu, allowUser: [...new Set([...(menu.allowUser || []), editingRole.role])] };
+      } else {
+        return { ...menu, allowUser: (menu.allowUser || []).filter(user => user !== editingRole.role) };
+      }
+    });
+
     setRoles(updatedRoles);
     setFilteredRoles(updatedRoles);
     localStorage.setItem("privileges", JSON.stringify(updatedRoles));
+    localStorage.setItem("menus", JSON.stringify(updatedMenus));
     setPrivilegeVisible(false);
   };
 
