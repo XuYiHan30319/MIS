@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { RightCircleTwoTone, InsuranceOutlined } from '@ant-design/icons';
+import { RightCircleTwoTone } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { isLogin } from '../utils/authorize';
@@ -18,36 +18,35 @@ export function Dashboard() {
     }
   }, [navigate]);
 
-  const items = [InsuranceOutlined].map((icon, index) => {
-    return {
-      key: `权限管理`,
-      icon: React.createElement(icon),
-      label: `权限管理`,
-      children: [
-        {
-          key: `用户管理`,
-          label: `用户管理`,
-          onClick: () => {
-            navigate('/dashboard/userControl');
-          }
-        },
-        {
-          key: `角色管理`,
-          label: `角色管理`,
-          onClick: () => {
-            navigate('/dashboard/roleControl');
-          }
-        },
-        {
-          key: `菜单管理`,
-          label: `菜单管理`,
-          onClick: () => {
-            navigate('/dashboard/menuControl');
-          }
-        },
-      ],
+  const renderMenuItems = (menuData, userPrivilege) => {
+    const menus = JSON.parse(menuData);
+    const buildMenuItems = (menus, parent = "") => {
+      const result = [];
+      for (const menu of menus) {
+        if (menu.parent === parent && (!menu.allowUser || menu.allowUser.includes(userPrivilege))) {
+          const children = buildMenuItems(menus, menu.title);
+          const menuItem = {
+            key: menu.title,
+            label: menu.title,
+            children: children.length > 0 ? children : null,
+            onClick: () => {
+              if (menu.parent !== "") {
+                navigate("/dashboard" + menu.path);
+              }
+            },
+          };
+          result.push(menuItem);
+        }
+      }
+      return result;
     };
-  });
+    let items = buildMenuItems(menus);
+    return items;
+  };
+
+
+  const items = renderMenuItems(localStorage.getItem("menus"), localStorage.getItem("privilege"));
+
 
   const pathItems = useLocation().pathname.split('/').filter(item => item);
   const pathLength = pathItems.length;
@@ -116,3 +115,5 @@ export function Dashboard() {
     </Layout>
   );
 };
+
+

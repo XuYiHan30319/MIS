@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, message, Select } from 'antd';
+import { isAuthorize } from '../utils/authorize';
+import {
+  useNavigate
 
+} from 'react-router-dom';
 export function MenuControl() {
   const [menus, setMenus] = useState(JSON.parse(localStorage.getItem('menus')) || []);
   const [filteredMenus, setFilteredMenus] = useState(menus);
   const [addMenuVisible, setAddMenuVisible] = useState(false);
   const [editingMenu, setEditingMenu] = useState(null);
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   useEffect(() => {
+    if (!isAuthorize("菜单管理")) {
+      navigate('/dashboard');
+    }
     if (!localStorage.getItem('menus')) {
       localStorage.setItem('menus', JSON.stringify([]));
     }
-  }, []);
+  }, [navigate]);
 
   const pathValid = () => ({
     validator(_, value) {

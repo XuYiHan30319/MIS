@@ -42,7 +42,6 @@ export function Login() {
         {
           title: '权限管理',
           parent: "",
-          icon: 'InsuranceOutlined',
           path: "",
         },
         {

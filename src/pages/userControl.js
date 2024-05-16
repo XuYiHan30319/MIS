@@ -82,7 +82,6 @@ export function UserControl() {
       localStorage.setItem("user", JSON.stringify(updatedUsers));
       setAddUserVisible(false);
     }).catch(info => {
-      console.log('Validate Failed:', info);
     });
   };
 
@@ -98,8 +97,8 @@ export function UserControl() {
   
   const navigate = useNavigate();
   useEffect(() => {
-    if (!isAuthorize()) {
-      navigate('/login');
+    if(!isAuthorize('用户管理')){
+      navigate('/dashboard');
     }
   }, [navigate]);
 

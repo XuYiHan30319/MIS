@@ -16,8 +16,8 @@ export function RoleControl() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthorize()) {
-      navigate('/login');
+    if(!isAuthorize("角色管理")){
+      navigate('/dashboard');
     }
     const storedMenus = JSON.parse(localStorage.getItem("menus")) || [];
     setMenus(transformToTreeData(storedMenus));
@@ -105,7 +105,6 @@ export function RoleControl() {
       localStorage.setItem("privileges", JSON.stringify(updatedRoles));
       setAddRoleVisible(false);
     }).catch(info => {
-      console.log('Validate Failed:', info);
     });
   };
 
@@ -130,10 +129,6 @@ export function RoleControl() {
   };
 
   const handlePrivilegeOk = () => {
-    const updatedRoles = roles.map(role =>
-      role.role === editingRole.role ? { ...role, menus: selectedKeys } : role
-    );
-
     const storedMenus = JSON.parse(localStorage.getItem("menus"));
     const updatedMenus = storedMenus.map(menu => {
       if (selectedKeys.includes(menu.path || menu.title)) {
@@ -142,10 +137,6 @@ export function RoleControl() {
         return { ...menu, allowUser: (menu.allowUser || []).filter(user => user !== editingRole.role) };
       }
     });
-
-    setRoles(updatedRoles);
-    setFilteredRoles(updatedRoles);
-    localStorage.setItem("privileges", JSON.stringify(updatedRoles));
     localStorage.setItem("menus", JSON.stringify(updatedMenus));
     setPrivilegeVisible(false);
   };
