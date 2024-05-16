@@ -104,7 +104,7 @@ export function Login() {
       username: values.username,
       password: CryptoJS.SHA256(values.password).toString(),
       email: values.email,
-      privilege: 1
+      privilege: "普通用户"
     });
     localStorage.setItem("user", JSON.stringify(users));
     setActiveKey('1');

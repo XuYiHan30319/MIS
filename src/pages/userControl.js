@@ -71,10 +71,10 @@ export function UserControl() {
         return;
       }
       let updatedUsers;
+      values.password = CryptoJS.SHA256(values.password).toString();
       if (editingUser) {
         updatedUsers = users.map(user => user.username === editingUser.username ? values : user);
       } else {
-        values.password = CryptoJS.SHA256(values.password).toString();
         updatedUsers = [...users, values];
       }
       setUsers(updatedUsers);
@@ -94,10 +94,10 @@ export function UserControl() {
     const filteredData = users.filter(user => user.username.toLowerCase().includes(searchValue));
     setFilteredUsers(filteredData);
   };
-  
+
   const navigate = useNavigate();
   useEffect(() => {
-    if(!isAuthorize('用户管理')){
+    if (!isAuthorize('用户管理')) {
       navigate('/dashboard');
     }
   }, [navigate]);
