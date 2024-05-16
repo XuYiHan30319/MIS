@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# 目录结构
+所有代码都在src目录下,目录结构如下
+```
+│  App.js
+│  index.css
+│  index.js
+│
+├─pages
+│      Dashboard.js
+│      Login.js
+│      menuControl.js
+│      roleControl.js
+│      userControl.js
+│
+├─router
+│      index.js
+│
+└─utils
+        authorize.js
+        userInfoVaild.js
+```
+其中index.js是入口文件，App.js是主页面，通过react-router-dom实现页面跳转，路由配置在router/index.js中，utils文件夹下是一些工具函数，包括用户信息验证和权限验证，pages文件夹下是各个页面的具体代码。index.css是导入的tailwindcss样式文件,用于自动生成css。
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# 使用的插件
+1. react-router-dom：用于实现页面跳转
+2. tailwindcss：尝试使用taiulwindcss来写样式
+3. antd组件库：页面组件库,页面的元素均使用了antd组件使页面和谐美观
 
-## Available Scripts
+# 项目运行启动方式
+`pnpm install`安装依赖
+`pnpm start`启动项目
+或者
+`bun install`安装依赖
+`bun start`启动项目
 
-In the project directory, you can run:
+# 数据存储方式
+数据存取使用了localStorage，将用户信息存储在localStorage中，每次进入页面时会先验证用户信息，如果用户信息不存在或者用户信息不正确，则会跳转到登录页面。
+**注意**: 本项目需要的localStorage数据有：	
+username	
+user	
+privilege
+privileges
+使用前请先清除以前的数据，否则可能会出现问题
 
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+需要有 README.md 文件描述的你的项目，包括但不限于项目目录结构、使用的插件、
+组件使用说明、项目运行启动方式
