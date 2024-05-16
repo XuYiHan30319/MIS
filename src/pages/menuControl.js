@@ -14,6 +14,15 @@ export function MenuControl() {
     }
   }, []);
 
+  const pathValid = () => ({
+    validator(_, value) {
+      if (value && !value.startsWith('/')) {
+        return Promise.reject(new Error('路径应该以/开头!'));
+      }
+      return Promise.resolve();
+    },
+  });
+
   const columns = [
     {
       title: '目录',
@@ -113,10 +122,13 @@ export function MenuControl() {
       <Table dataSource={filteredMenus} columns={columns} rowKey="title" />
       <Modal title={editingMenu ? 'Edit Menu' : 'Add Menu'} open={addMenuVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} layout="vertical" name="menuForm">
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please enter title!' }]}>
+          <Form.Item name="title" label="Title" rules={[{ required: true, message: '请输入标题!' }]}>
             {editingMenu ? <Input disabled /> : <Input />}
           </Form.Item>
-          <Form.Item name="parent" label="Parent">
+          <Form.Item
+            name="parent"
+            label="Parent"
+          >
             <Select disabled={editingMenu && !form.getFieldValue('parent')}>
               <Select.Option key="root" value="">None</Select.Option>
               {menus.map(menu => {
@@ -131,12 +143,12 @@ export function MenuControl() {
               })}
             </Select>
           </Form.Item>
-          <Form.Item name="path" label="Path" rules={[{ required: true, message: 'Please enter path!' }]}>
+          <Form.Item name="path" label="Path" rules={[pathValid]}>
             <Input />
           </Form.Item>
         </Form>
       </Modal>
 
-    </div>
+    </div >
   );
 }

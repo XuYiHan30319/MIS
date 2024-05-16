@@ -48,17 +48,17 @@ export function Login() {
         {
           title: '用户管理',
           parent: '权限管理',
-          path: '/dashboard/userControl',
+          path: '/userControl',
         },
         {
           title: '角色管理',
           parent: '权限管理',
-          path: '/dashboard/roleControl',
+          path: '/roleControl',
         },
         {
           title: '菜单管理',
           parent: '权限管理',
-          path: '/dashboard/menuControl',
+          path: '/menuControl',
         }
       ];
       localStorage.setItem('menus', JSON.stringify(menus));

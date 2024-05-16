@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input } from 'antd';
+import { Table, Button, Modal, Form, Input, Tree } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { isAuthorize } from '../utils/authorize';
 
 export function RoleControl() {
   const [roles, setRoles] = useState(JSON.parse(localStorage.getItem("privileges")) || []);
   const [filteredRoles, setFilteredRoles] = useState(roles);
+  const [menus, setMenus] = useState([]);
   const [addRoleVisible, setAddRoleVisible] = useState(false);
   const [editingRole, setEditingRole] = useState(null);
+  const [privilegeVisible, setPrivilegeVisible] = useState(false);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [form] = Form.useForm();
 
   const navigate = useNavigate();
+
   useEffect(() => {
     if (!isAuthorize()) {
       navigate('/login');
     }
+    const storedMenus = JSON.parse(localStorage.getItem("menus")) || [];
+    setMenus(transformToTreeData(storedMenus));
   }, [navigate]);
 
   const columns = [
@@ -35,10 +41,37 @@ export function RoleControl() {
         <span>
           <Button onClick={() => editRole(record)}>Edit</Button>
           <Button onClick={() => deleteRole(record.role)} style={{ marginLeft: 8 }} danger>Delete</Button>
+          <Button onClick={() => managePrivilege(record)} style={{ marginLeft: 8 }}>privilege</Button>
         </span>
       ),
     },
   ];
+
+  const transformToTreeData = (menuList) => {
+    const treeData = [];
+    const map = {};
+
+    menuList.forEach(menu => {
+      const { title, path, parent } = menu;
+      const key = path || title;
+
+      if (!map[key]) {
+        map[key] = { title, key, children: [] };
+      }
+
+      if (parent) {
+        const parentKey = parent;
+        if (!map[parentKey]) {
+          map[parentKey] = { title: parent, key: parentKey, children: [] };
+        }
+        map[parentKey].children.push(map[key]);
+      } else {
+        treeData.push(map[key]);
+      }
+    });
+
+    return treeData;
+  };
 
   const addRole = () => {
     setEditingRole(null);
@@ -86,6 +119,30 @@ export function RoleControl() {
     setFilteredRoles(filteredData);
   };
 
+  const managePrivilege = (role) => {
+    setEditingRole(role);
+    setSelectedKeys(role.menus || []);
+    setPrivilegeVisible(true);
+  };
+
+  const handlePrivilegeOk = () => {
+    const updatedRoles = roles.map(role =>
+      role.role === editingRole.role ? { ...role, menus: selectedKeys } : role
+    );
+    setRoles(updatedRoles);
+    setFilteredRoles(updatedRoles);
+    localStorage.setItem("privileges", JSON.stringify(updatedRoles));
+    setPrivilegeVisible(false);
+  };
+
+  const handlePrivilegeCancel = () => {
+    setPrivilegeVisible(false);
+  };
+
+  const onCheck = (checkedKeys) => {
+    setSelectedKeys(checkedKeys);
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -97,6 +154,7 @@ export function RoleControl() {
         <Button type="primary" onClick={addRole}>Add Role</Button>
       </div>
       <Table dataSource={filteredRoles} columns={columns} rowKey="role" />
+      {/* 用户管理 */}
       <Modal title={editingRole ? 'Edit Role' : 'Add Role'} open={addRoleVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} layout="vertical" name="roleForm">
           <Form.Item name="role" label="Role" rules={[{ required: true, message: '请输入角色名!' }]}>
@@ -106,6 +164,15 @@ export function RoleControl() {
             <Input />
           </Form.Item>
         </Form>
+      </Modal>
+      {/* 权限管理 */}
+      <Modal title="Manage Privileges" open={privilegeVisible} onOk={handlePrivilegeOk} onCancel={handlePrivilegeCancel}>
+        <Tree
+          checkable
+          onCheck={onCheck}
+          checkedKeys={selectedKeys}
+          treeData={menus}
+        />
       </Modal>
     </div>
   );
