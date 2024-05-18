@@ -1,76 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Tabs, Typography, message, } from 'antd';
+import { Form, Input, Button, Tabs, message, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
-import { passwordValid, emailValid } from '../utils/userInfoVaild';
+import { passwordValid, emailValid } from '../../utils/userInfoVaild';
+import { initData } from '../../utils/initData';
 
 export function Login() {
   const [activeKey, setActiveKey] = useState('1');
   const navigate = useNavigate();
 
   useEffect(() => {
-    let users = JSON.parse(localStorage.getItem("user")) || [];
-    if (users.length === 0) {
-      localStorage.setItem("user", JSON.stringify([
-        {
-          username: 'admin',
-          password: CryptoJS.SHA256('Admin123456').toString(),
-          email: "81723334@qq.com",
-          privilege: "管理员"
-        }
-      ]));
-    }
-    //设置权限列表
-    let privileges = JSON.parse(localStorage.getItem('privileges')) || [];
-    if (privileges.length === 0) {
-      privileges = [
-        {
-          role: '管理员',
-          desc: '拥有所有权限'
-        },
-        {
-          role: '普通用户',
-          desc: '只能查看'
-        }
-      ];
-      localStorage.setItem('privileges', JSON.stringify(privileges));
-    }
-    //设置菜单列表
-    let menus = JSON.parse(localStorage.getItem('menus')) || [];
-    if (menus.length === 0) {
-      menus = [
-        {
-          title: '权限管理',
-          parent: "",
-          path: "",
-        },
-        {
-          title: '用户管理',
-          parent: '权限管理',
-          path: '/userControl',
-          allowUser: [
-            '管理员'
-          ]
-        },
-        {
-          title: '角色管理',
-          parent: '权限管理',
-          path: '/roleControl',
-          allowUser: [
-            '管理员'
-          ]
-        },
-        {
-          title: '菜单管理',
-          parent: '权限管理',
-          path: '/menuControl',
-          allowUser: [
-            '管理员'
-          ]
-        }
-      ];
-      localStorage.setItem('menus', JSON.stringify(menus));
-    }
+    initData();
   }, []);
 
   const login = (values) => {
@@ -111,133 +51,144 @@ export function Login() {
     message.success('注册成功', 3);
   };
 
+
+  const items = [
+    {
+      key: "1",
+      label: <Typography.Title level={3}>登录</Typography.Title>,
+      children: (
+        <Form
+          onFinish={(values) => {
+            login(values);
+          }}
+          labelCol={{
+            span: 8,
+          }}
+          style={{ marginLeft: '-100px' }}
+        >
+          <Form.Item
+            label="用户名"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: '请输入用户名',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="密码"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: '请输入密码',
+              },
+              passwordValid,
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            style={{ marginLeft: '290px' }}
+          >
+            <Button type="primary" htmlType="submit" >
+              登录
+            </Button>
+          </Form.Item>
+        </Form>
+      ),
+    },
+    {
+      key: "2",
+      label: <Typography.Title level={3}>注册</Typography.Title>,
+      children: (
+        <Form
+          onFinish={(values) => {
+            Register(values);
+          }}
+          labelCol={{
+            span: 8,
+          }}
+          style={{ marginLeft: '-100px' }}
+        >
+          <Form.Item
+            label="用户名"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: '请输入用户名',
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="邮箱"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: '请输入邮箱',
+              },
+              emailValid,
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="密码"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: '请输入密码',
+              },
+              passwordValid,
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            label="再次输入密码"
+            name="repeatpassword"
+            dependencies={['password']}
+            rules={[
+              {
+                required: true,
+                message: '请再次输入密码',
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') !== value) {
+                    return Promise.reject('两次输入的密码不一致！');
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
+            <Input.Password />
+          </Form.Item>
+          <Form.Item
+            style={{ marginLeft: '290px' }}
+          >
+            <Button type="primary" htmlType="submit" >
+              注册
+            </Button>
+          </Form.Item>
+        </Form>
+      ),
+    },
+  ];
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full space-y-8">
-        <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={setActiveKey} centered>
-          <Tabs.TabPane tab={<Typography.Title level={3}>登录</Typography.Title>} key="1">
-            <Form
-              onFinish={(values) => {
-                login(values);
-              }}
-              labelCol={{
-                span: 8,
-              }}
-              style={{ marginLeft: '-100px' }}
-            >
-              <Form.Item
-                label="用户名"
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入用户名',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="密码"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入密码',
-                  },
-                  passwordValid,
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                style={{ marginLeft: '290px' }}
-              >
-                <Button type="primary" htmlType="submit" >
-                  登录
-                </Button>
-              </Form.Item>
-            </Form>
-          </Tabs.TabPane>
-          <Tabs.TabPane tab={<Typography.Title level={3}>注册</Typography.Title>} key="2">
-            <Form
-              onFinish={(values) => {
-                Register(values);
-              }}
-              labelCol={{
-                span: 8,
-              }}
-              style={{ marginLeft: '-100px' }}
-            >
-              <Form.Item
-                label="用户名"
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入用户名',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="邮箱"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入邮箱',
-                  },
-                  emailValid,
-                ]}
-              >
-                <Input />
-              </Form.Item>
-              <Form.Item
-                label="密码"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入密码',
-                  },
-                  passwordValid,
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                label="再次输入密码"
-                name="repeatpassword"
-                dependencies={['password']}
-                rules={[
-                  {
-                    required: true,
-                    message: '请再次输入密码',
-                  },
-                  ({ getFieldValue }) => ({
-                    validator(_, value) {
-                      if (!value || getFieldValue('password') !== value) {
-                        return Promise.reject('两次输入的密码不一致！');
-                      }
-                      return Promise.resolve();
-                    },
-                  }),
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                style={{ marginLeft: '290px' }}
-              >
-                <Button type="primary" htmlType="submit" >
-                  注册
-                </Button>
-              </Form.Item>
-            </Form>
-          </Tabs.TabPane>
-        </Tabs>
+        <Tabs defaultActiveKey="1" activeKey={activeKey} onChange={setActiveKey} centered items={items} />
       </div>
     </div>
   );

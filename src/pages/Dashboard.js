@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { RightCircleTwoTone } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme, Button } from 'antd';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { isLogin } from '../utils/authorize';
+import { isLogin } from '../../utils/authorize';
 const { Content, Sider } = Layout;
 
 
@@ -50,7 +50,14 @@ export function Dashboard() {
 
   const pathItems = useLocation().pathname.split('/').filter(item => item);
   const pathLength = pathItems.length;
-
+  const reallpathItems = pathItems.map((item, index) => ({
+    key: index,
+    title: index === pathLength - 1 ? (
+      <span>{item}</span>
+    ) : (
+      <Link to={`/${pathItems.slice(0, index + 1).join('/')}`}>{item}</Link>
+    )
+  }));
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout>
@@ -80,17 +87,7 @@ export function Dashboard() {
             alignItems: 'center',
             margin: '16px 0',
           }}>
-            <Breadcrumb>
-              {pathItems.map((item, index) => (
-                <Breadcrumb.Item key={index}>
-                  {index === pathLength - 1 ? (
-                    <span>{item}</span>
-                  ) : (
-                    <Link to={`/${pathItems.slice(0, index + 1).join('/')}`}>{item}</Link>
-                  )}
-                </Breadcrumb.Item>
-              ))}
-            </Breadcrumb>
+            <Breadcrumb items={reallpathItems} />
             <div>
               <span style={{ marginRight: 16 }}>welcome {localStorage.getItem('username')}</span>
               <Button type="primary" shape="circle" onClick={() => {
