@@ -108,6 +108,7 @@ export function MenuControl() {
       setFilteredMenus(updatedMenus);
       localStorage.setItem('menus', JSON.stringify(updatedMenus));
       setAddMenuVisible(false);
+      window.location.reload();
     }).catch(info => {
       console.log('Validate Failed:', info);
     });
