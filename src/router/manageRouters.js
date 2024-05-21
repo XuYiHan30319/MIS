@@ -8,6 +8,7 @@ import { OrderControl } from "../pages/manage/orderControl";
 import { ProductControl } from "../pages/manage/productControl";
 import { ClassificationControl } from "../pages/manage/classificationControl";
 import { Login } from "../pages/manage/Login";
+import { NotFound } from '../pages/manage/404';
 
 const manageRouters = [
   {
@@ -44,7 +45,7 @@ const manageRouters = [
       },
       {
         path: "*",
-        element: <Navigate to="userControl" replace />
+        element: <NotFound />
       }
     ]
   },
