@@ -11,15 +11,16 @@ export function Dashboard() {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const navigate = useNavigate();
-  // 侧边栏的菜单项
   useEffect(() => {
     if (!isLogin()) {
-      navigate('/login');
+      navigate('/manage/login');
     }
   }, [navigate]);
 
   const renderMenuItems = (menuData, userPrivilege) => {
     const menus = JSON.parse(menuData);
+    console.log(userPrivilege)
+    console.log(menuData)
     const buildMenuItems = (menus, parent = "") => {
       const result = [];
       for (const menu of menus) {
@@ -31,7 +32,7 @@ export function Dashboard() {
             children: children.length > 0 ? children : null,
             onClick: () => {
               if (menu.parent !== "") {
-                navigate("/dashboard" + menu.path);
+                navigate("/manage/dashboard" + menu.path);
               }
             },
           };
@@ -41,12 +42,11 @@ export function Dashboard() {
       return result;
     };
     let items = buildMenuItems(menus);
+
     return items;
   };
 
-
   const items = renderMenuItems(localStorage.getItem("menus"), localStorage.getItem("privilege"));
-
 
   const pathItems = useLocation().pathname.split('/').filter(item => item);
   const pathLength = pathItems.length;
@@ -92,7 +92,7 @@ export function Dashboard() {
               <span style={{ marginRight: 16 }}>welcome {localStorage.getItem('username')}</span>
               <Button type="primary" shape="circle" onClick={() => {
                 localStorage.removeItem('isLogin');
-                navigate('/login');
+                navigate('/manage/login');
               }} icon={<RightCircleTwoTone />} />
             </div>
           </div>

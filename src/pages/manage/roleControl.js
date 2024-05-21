@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, Tree } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { isAuthorize } from '../utils/authorize';
+import { isAuthorize } from '../../utils/authorize';
 
 export function RoleControl() {
   const [roles, setRoles] = useState(JSON.parse(localStorage.getItem("privileges")) || []);
@@ -16,7 +16,7 @@ export function RoleControl() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(!isAuthorize("角色管理")){
+    if (!isAuthorize("角色管理")) {
       navigate('/dashboard');
     }
     const storedMenus = JSON.parse(localStorage.getItem("menus")) || [];
@@ -159,7 +159,7 @@ export function RoleControl() {
         />
         <Button type="primary" onClick={addRole}>Add Role</Button>
       </div>
-      <Table dataSource={filteredRoles} columns={columns} rowKey="role" />
+      <Table dataSource={filteredRoles} columns={columns} rowKey="role" pagination={{ pageSize: 7 }} />
       {/* 用户管理 */}
       <Modal title={editingRole ? 'Edit Role' : 'Add Role'} open={addRoleVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} layout="vertical" name="roleForm">

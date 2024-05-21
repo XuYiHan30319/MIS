@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Table, Button, Modal, Form, Input, Select, message } from 'antd';
 import CryptoJS from 'crypto-js';
-import { passwordValid, emailValid } from '../utils/userInfoVaild';
-import { isAuthorize } from '../utils/authorize';
+import { passwordValid, emailValid } from '../../utils/userInfoVaild';
+import { isAuthorize } from '../../utils/authorize';
 
 export function UserControl() {
   const [users, setUsers] = useState(JSON.parse(localStorage.getItem("user")) || []);
@@ -98,10 +98,9 @@ export function UserControl() {
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthorize('用户管理')) {
-      navigate('/dashboard');
+      navigate('/manage/dashboard');
     }
   }, [navigate]);
-
 
   return (
     <div>
@@ -113,7 +112,7 @@ export function UserControl() {
         />
         <Button type="primary" onClick={addUser}>Add User</Button>
       </div>
-      <Table dataSource={filteredUsers} columns={columns} rowKey="username" />
+      <Table dataSource={filteredUsers} columns={columns} rowKey="username" pagination={{ pageSize: 7 }} />
       <Modal title={editingUser ? 'Edit User' : 'Add User'} open={addUserVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} layout="vertical" name="userForm">
           <Form.Item name="username" label="Username" >

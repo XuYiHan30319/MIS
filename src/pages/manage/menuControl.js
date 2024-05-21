@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal, Form, Input, message, Select } from 'antd';
-import { isAuthorize } from '../utils/authorize';
+import { isAuthorize } from '../../utils/authorize';
 import {
   useNavigate
 
@@ -14,7 +14,7 @@ export function MenuControl() {
   const navigate = useNavigate();
   useEffect(() => {
     if (!isAuthorize("菜单管理")) {
-      navigate('/dashboard');
+      navigate('/manage/dashboard');
     }
     if (!localStorage.getItem('menus')) {
       localStorage.setItem('menus', JSON.stringify([]));
@@ -90,6 +90,9 @@ export function MenuControl() {
 
   const handleOk = () => {
     form.validateFields().then(values => {
+      if (!values.parent) {
+        values.parent = '';
+      }
       let updatedMenus;
       if (editingMenu) {
         updatedMenus = menus.map(menu => menu.title === editingMenu.title ? values : menu);
@@ -131,7 +134,7 @@ export function MenuControl() {
         />
         <Button type="primary" onClick={addMenu}>Add Menu</Button>
       </div>
-      <Table dataSource={filteredMenus} columns={columns} rowKey="title" />
+      <Table dataSource={filteredMenus} columns={columns} rowKey="title" pagination={{ pageSize: 7 }} />
       <Modal title={editingMenu ? 'Edit Menu' : 'Add Menu'} open={addMenuVisible} onOk={handleOk} onCancel={handleCancel}>
         <Form form={form} layout="vertical" name="menuForm">
           <Form.Item name="title" label="Title" rules={[{ required: true, message: '请输入标题!' }]}>
