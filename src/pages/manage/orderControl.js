@@ -71,8 +71,6 @@ export function OrderControl() {
       navigate('/manage/dashboard');
       return;
     }
-    console.log(currentUser)
-    console.log(orders)
     const filtered = userPrivilege === '管理员' ? orders : orders.filter(order => order.sellerId === currentUser);
     setFilteredOrders(filtered);
   }, [currentUser, orders, navigate, userPrivilege]);

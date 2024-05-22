@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { initData } from "./utils/initData";
 
 function App() {
-
   useEffect(() => {
     initData();
   }, []);

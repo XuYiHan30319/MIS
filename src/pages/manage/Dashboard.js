@@ -19,12 +19,10 @@ export function Dashboard() {
 
   const renderMenuItems = (menuData, userPrivilege) => {
     const menus = JSON.parse(menuData);
-    console.log(userPrivilege)
-    console.log(menuData)
     const buildMenuItems = (menus, parent = "") => {
       const result = [];
       for (const menu of menus) {
-        if (menu.parent === parent && (!menu.allowUser || menu.allowUser.includes(userPrivilege))) {
+        if (menu.parent === parent && (menu.parent === "" || menu.allowUser.includes(userPrivilege))) {
           const children = buildMenuItems(menus, menu.title);
           const menuItem = {
             key: menu.title,
@@ -42,7 +40,6 @@ export function Dashboard() {
       return result;
     };
     let items = buildMenuItems(menus);
-
     return items;
   };
 
