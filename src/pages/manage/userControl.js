@@ -48,7 +48,11 @@ export function UserControl() {
   const editUser = (user) => {
     setEditingUser(user);
     setAddUserVisible(true);
-    form.setFieldsValue(user);
+    form.setFieldsValue({
+      ...user,
+      password: '',
+      repeatPassword: ''
+    });
 
     const index = users.findIndex(u => u.username === user.username);
     if (index !== -1) {
@@ -57,6 +61,7 @@ export function UserControl() {
       localStorage.setItem("user", JSON.stringify(users));
     }
   };
+  
   const deleteUser = (username) => {
     const updatedUsers = users.filter(user => user.username !== username);
     setUsers(updatedUsers);
